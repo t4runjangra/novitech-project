@@ -6,7 +6,7 @@ const app = express()
 
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: `http://localhost:5173`,
         credentials: true
     })
 )
@@ -21,8 +21,8 @@ app.get("/", (req,res) => {
     res.send("hello world ! api is running")
 })
 
-app.use('/api/tasks', taskRoutes);
-app.use('/api/users',userRoutes)
+app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1/users',userRoutes)
 
 
 export {app}
