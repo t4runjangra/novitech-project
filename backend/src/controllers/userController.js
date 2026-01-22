@@ -33,7 +33,7 @@ export const loginUser = async (req, res) => {
         if (user && (await bcrypt.compare(password, user.password))) {
             res.json({
                 _id: user._id,
-                name: user._name,
+                name: user.name,
                 email: user.email,
                 token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
             })

@@ -42,7 +42,7 @@ const AddTaskModal = ({ onTaskAdded }) => {
         <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button size="sm">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                         <Plus className="mr-2 h-4 w-4" /> Add Task
                     </Button>
                 </DialogTrigger>
@@ -61,6 +61,7 @@ const AddTaskModal = ({ onTaskAdded }) => {
                                 placeholder="What needs to be done?"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                className="focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -83,7 +84,7 @@ const AddTaskModal = ({ onTaskAdded }) => {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" className="w-full">Save Task</Button>
+                            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">Save Task</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

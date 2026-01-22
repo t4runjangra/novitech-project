@@ -31,7 +31,7 @@ const Dashboard = () => {
     try {
       await API.delete(`/tasks/${id}`);
       setTasks(tasks.filter(task => task._id !== id));
-      showError("Task deleted Successfully!"); // Using showError as requested for delete feedback
+      showError("Task deleted Successfully!"); 
     } catch (error) {
       showError("Failed to delete task");
     }
@@ -41,10 +41,8 @@ const Dashboard = () => {
     try {
       const newStatus = task.status === 'completed' ? 'pending' : 'completed';
       
-      // Update the task status in the database
       const { data } = await API.put(`/tasks/${task._id}`, { status: newStatus });
       
-      // Update local state
       setTasks(tasks.map(t => t._id === task._id ? data : t));
       showSuccess(`Task marked as ${newStatus}`);
     } catch (error) {
@@ -56,10 +54,11 @@ const Dashboard = () => {
     setTasks((prev) => [newTask, ...prev]);
   };
 
+  
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Welcome, {(user?.name)}</h1>
         <Button variant="destructive" onClick={logout}>Logout</Button>
       </div>
 
@@ -89,7 +88,6 @@ const Dashboard = () => {
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">{task.description}</p>
               <div className="flex justify-end gap-2">
-                {/* Complete/Toggle Button */}
                 <Button 
                   variant="outline" 
                   size="icon"
@@ -99,7 +97,6 @@ const Dashboard = () => {
                   <CheckCircle className={`h-4 w-4 ${task.status === 'completed' ? 'text-green-600' : 'text-slate-400'}`} />
                 </Button>
                 
-                {/* Delete Button */}
                 <Button 
                   variant="outline" 
                   size="icon" 

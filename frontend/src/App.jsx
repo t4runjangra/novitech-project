@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import './App.css'
-import LoginPage from './pages/login.jsx';
+import './index.css'
+import LoginForm from "./components/LoginForm.jsx"
 import RegisterForm from './components/SignupForm.jsx';
 import { AuthContext } from './context/AuthContext.jsx';
 import Dashboard from './pages/dashboard.jsx';
@@ -10,11 +10,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/dashboard" />} />
-      <Route path="/register" element={!user ? <RegisterForm /> : <Navigate to="/dashboard" />} />
+      <Route path="/login" element={!user ? <LoginForm /> : <Navigate to="/dashboard" />} />
+      <Route path="/signup" element={!user ? <RegisterForm /> : <Navigate to="/dashboard" />} />
       <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 }
+
 export default App
