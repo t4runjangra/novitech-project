@@ -9,6 +9,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../context/toastContext.jsx';
 import { motion } from 'framer-motion';
+import { CheckSquare } from "lucide-react";
+
 
 const LoginForm = () => {
   const { showSuccess, showError } = useToast();
@@ -47,7 +49,7 @@ const LoginForm = () => {
       localStorage.setItem('user', JSON.stringify(data));
       setUser(data);
       console.log(data);
-      
+
       navigate('/dashboard');
       showSuccess("Login Successful");
 
@@ -74,7 +76,21 @@ const LoginForm = () => {
   };
 
   return (
+
     <div className='bg-gray-200 h-screen flex justify-center items-center overflow-hidden'>
+      <nav className="absolute top-0 left-0 w-full p-6 flex justify-evenly items-center z-10">
+        <div className='flex  items-center justify-between w-5xl h-15 rounded-2xl shadow-2xl bg-gray-200 '>
+
+          <div className="flex items-center gap-2 font-bold ml-20 text-2xl text-blue-600">
+            <CheckSquare className="h-6 w-6" />
+            <span>TaskFlow</span>
+          </div>
+
+          <div className="text-sm font-medium text-slate-500 mr-20">
+            Need help? <a href="#" className="text-blue-600 hover:underline">Support</a>
+          </div>
+        </div>
+      </nav>
       <div className='h-3/4 w-full max-w-5xl flex justify-center bg-white rounded-2xl shadow-xl overflow-hidden'>
         <div className='w-1/2 flex justify-end items-center max-sm:hidden bg-blue-500'>
           <img
@@ -170,6 +186,14 @@ const LoginForm = () => {
           </Card>
         </div>
       </div>
+      <footer className="absolute bottom-6 w-full text-center text-xs text-slate-400">
+        <div className="flex justify-center gap-4 mb-2">
+          <Link to="/privacy" className="hover:text-blue-500 transition-colors">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-blue-500 transition-colors">Terms of Service</Link>
+          <Link to="/contact" className="hover:text-blue-500 transition-colors">Contact Us</Link>
+        </div>
+        <p>© 2026 TaskFlow. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
