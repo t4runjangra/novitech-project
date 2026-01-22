@@ -6,9 +6,10 @@ import { Button } from "./ui/button.jsx";
 import API from '../services/api.js';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { useNavigate, Link } from 'react-router-dom';
-import { Loader2, Eye, EyeOff } from 'lucide-react'; // Optional: For loading spinner and password toggle icons
-
+import { Loader2, Eye, EyeOff } from 'lucide-react'; 
+import { useToast } from '../context/toastContext.jsx';
 const LoginForm = () => {
+  const { showSuccess, showError } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,22 +49,19 @@ const LoginForm = () => {
         password 
       });
       
-      // Store token and user data
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data));
       
-      // Update context
       setUser(data);
       
-      // Show success message (optional)
       console.log('Login successful!');
       
-      // Navigate to dashboard
       navigate('/dashboard');
+      showSuccess("Login Successful");
       
     } catch (error) {
       console.error('Login error:', error);
-      
+      showError("Login Failed");
       // Handle different error types
       if (error.response) {
         // Server responded with error status
@@ -172,7 +170,7 @@ const LoginForm = () => {
               </div>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center mb-1">
               <input
                 id="remember-me"
                 type="checkbox"

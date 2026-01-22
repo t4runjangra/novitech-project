@@ -127,7 +127,7 @@ const RegisterForm = () => {
         password: formData.password
       };
 
-      const { data } = await API.post('/user/register', registrationData);
+      const { data } = await API.post('/users/register', registrationData);
       
       // Store token and user data
       localStorage.setItem('token', data.token);
