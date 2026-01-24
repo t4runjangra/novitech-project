@@ -1,6 +1,6 @@
 export const SuccessToast = ({ message, onClose }) => {
   return (
-    <div className="fixed top-4 right-4 z-50 max-w-sm bg-green-500 text-white p-4 rounded-lg shadow-xl border border-green-600 animate-in slide-in-from-top-2 duration-300">
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm bg-green-500 text-white p-4 rounded-lg shadow-xl border border-green-600 animate-in slide-in-from-top-2 duration-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

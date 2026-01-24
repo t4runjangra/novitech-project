@@ -1,16 +1,22 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from '../services/api';
-import { AuthContext } from '../context/AuthContext';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, CheckCircle } from "lucide-react";
+import { Trash2, CheckCircle, ListTodo } from "lucide-react";
 import AddTaskModal from '../components/AddTask';
 import { useToast } from '../context/toastContext';
-import { Sidebar } from '../components/SIdebar';
+import { Sidebar } from '../components/Sidebar';
+
 const Dashboard = () => {
   const { showSuccess, showError } = useToast();
   const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState('all');
+
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'all') return true;
+    return task.status.toLowerCase() === filter.toLowerCase();
+  });
 
   const fetchTasks = async () => {
     try {
@@ -39,7 +45,6 @@ const Dashboard = () => {
   const handleToggleStatus = async (task) => {
     try {
       const newStatus = task.status === 'completed' ? 'pending' : 'completed';
-
       const { data } = await API.put(`/tasks/${task._id}`, { status: newStatus });
 
       setTasks(tasks.map(t => t._id === task._id ? data : t));
@@ -53,59 +58,106 @@ const Dashboard = () => {
     setTasks((prev) => [newTask, ...prev]);
   };
 
-
   return (
-    <>
-      <Sidebar />
-      <div className=" h-screen p-8  space-y-6 ml-64  bg-gray-200  flex flex-col ">
+    <div className="flex min-h-screen bg-gray-200 dark:bg-slate-950 transition-colors duration-300">
+      <Sidebar activeFilter={filter} onFilterChange={setFilter} />
 
-        <div className="flex justify-between items-center bg-slate-100 p-4 rounded-lg">
-          <p className="text-slate-600">You have {tasks.length} tasks</p>
+      <main className="flex-1 ml-64 p-8 flex flex-col space-y-6 overflow-y-auto">
+
+        <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <ListTodo className="text-blue-600 dark:text-blue-400 h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">My Tasks</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                You have {tasks.length} total tasks
+              </p>
+            </div>
+          </div>
           <AddTaskModal onTaskAdded={handleTaskAdded} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tasks.map((task) => (
-            <Card
-              key={task._id}
-              className={`hover:shadow-md transition-all ${task.status === 'completed' ? 'opacity-60 bg-slate-50' : 'opacity-100'
-                }`}
-            >
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className={`text-lg font-medium ${task.status === 'completed' ? 'line-through text-slate-500' : ''
-                  }`}>
-                  {task.title}
-                </CardTitle>
-                <Badge variant={task.status === 'completed' ? 'success' : 'secondary'}>
-                  {task.status}
-                </Badge>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">{task.description}</p>
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleToggleStatus(task)}
-                    className={task.status === 'completed' ? 'bg-green-100 border-green-500' : ''}
-                  >
-                    <CheckCircle className={`h-4 w-4 ${task.status === 'completed' ? 'text-green-600' : 'text-slate-400'}`} />
-                  </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <Card
+                key={task._id}
+                className={`group transition-all duration-300 border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md ${task.status === 'completed'
+                  ? 'opacity-70 bg-slate-50 dark:bg-slate-900/40'
+                  : 'bg-white dark:bg-slate-900'
+                  }`}
+              >
+                <CardHeader className="flex flex-row items-start justify-between pb-3">
+                  <div className="space-y-1">
+                    <CardTitle className={`text-lg font-bold transition-all ${task.status === 'completed'
+                      ? 'line-through text-slate-400 dark:text-slate-500'
+                      : 'text-slate-800 dark:text-slate-100'
+                      }`}>
+                      {task.title}
+                    </CardTitle>
+                  </div>
+                </CardHeader>
 
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(task._id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 min-h-10">
+                    {task.description}
+                  </p>
+
+                  <div className="flex justify-between gap-2 pt-2
+                  w-full border-t border-slate-100 dark:border-slate-800 ">
+                    <Badge
+                      className={`capitalize border-2 transition-colors duration-300 ${task.status === 'completed'
+                          ? 'text-green-500 border-green-500 bg-green-50 '
+                          : 'bg-red-50 text-red-600 border-red-400'
+                        }`}
+                      variant={task.status === 'completed' ? 'outline' : 'secondary'}
+                    >
+                      {task.status}
+                    </Badge>
+                    <div className='gap-2 w-1/2 flex justify-end'>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleToggleStatus(task)}
+                        className={`rounded-full transition-colors ${task.status === 'completed'
+                          ? 'bg-green-100 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                          : 'hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20'
+                          }`}
+                      >
+                        <CheckCircle className={`h-4 w-4 ${task.status === 'completed' ? 'text-green-600' : 'text-slate-400'
+                          }`} />
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDelete(task._id)}
+                        className="rounded-full hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            /* Empty State */
+            <div className="col-span-full py-20 flex flex-col items-center justify-center space-y-4 bg-white/50 dark:bg-slate-900/30 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-800">
+              <div className="p-4 bg-slate-200 dark:bg-slate-800 rounded-full">
+                <ListTodo className="h-8 w-8 text-slate-400" />
+              </div>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">
+                No {filter !== 'all' ? filter : ''} tasks found.
+              </p>
+            </div>
+          )}
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };
 
