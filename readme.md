@@ -71,7 +71,6 @@ JWT_SECRET = YOUR_SECRET_KEY
 * Start the server: 
 ``` npm start ```
 
-<br>
 
 ### 3. Frontend Setup
 ``` bash 
@@ -79,14 +78,12 @@ cd ../frontend
 npm install
 npm run dev
 ```
-<br>
 
 ## 📂 Project Structure
 * ```/frontend``` : React components, Context API, and Tailwind styles.
 * ```/backend``` :  API routes, Controller logic, and Database models.
 
 
-<br>
 
 ## 📝 License
 This project was developed as part of the Navio Tech Solution Internship Program.
