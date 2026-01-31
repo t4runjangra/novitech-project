@@ -7,11 +7,13 @@ import { Trash2, CheckCircle, ListTodo } from "lucide-react";
 import AddTaskModal from '../components/AddTask';
 import { useToast } from '../context/toastContext';
 import { Sidebar } from '../components/Sidebar';
-
+import { Menu } from 'lucide-react';
+import { CheckSquare } from 'lucide-react';
 const Dashboard = () => {
   const { showSuccess, showError } = useToast();
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const filteredTasks = tasks.filter(task => {
     if (filter === 'all') return true;
@@ -60,9 +62,24 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-200 dark:bg-slate-950 transition-colors duration-300">
-      <Sidebar activeFilter={filter} onFilterChange={setFilter} />
+      <Sidebar
+        activeFilter={filter}
+        onFilterChange={setFilter}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+      />
 
-      <main className="flex-1 ml-64 p-8 flex flex-col space-y-6 overflow-y-auto">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 flex flex-col space-y-6 transition-all duration-300">
+
+        <div className="flex md:hidden items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm">
+          <div className="flex items-center gap-2 font-bold text-blue-600">
+            <CheckSquare className="h-5 w-5" />
+            <span>TaskFlow</span>
+          </div>
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
+            <Menu className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+          </Button>
+        </div>
 
         <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
           <div className="flex items-center gap-3">
@@ -109,8 +126,8 @@ const Dashboard = () => {
                   w-full border-t border-slate-100 dark:border-slate-800 ">
                     <Badge
                       className={`capitalize border-2 transition-colors duration-300 ${task.status === 'completed'
-                          ? 'text-green-500 border-green-500 bg-green-50 '
-                          : 'bg-red-50 text-red-600 border-red-400'
+                        ? 'text-green-500 border-green-500 bg-green-50 '
+                        : 'bg-red-50 text-red-600 border-red-400'
                         }`}
                       variant={task.status === 'completed' ? 'outline' : 'secondary'}
                     >
